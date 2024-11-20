@@ -5,18 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.util.List;
 
 public class HiloChat implements Runnable{
 
 	private Thread thread;
 	private static int num_cliente = 0;
 	private Socket socketAlCliente;
+	private List<Socket> clientes;
 	
 	
-	public HiloChat (Socket socketAlCliente) {
+	public HiloChat (Socket socketAlCliente, List<Socket> clientes) {
 		num_cliente++;
 		thread = new Thread(this, "Cliente " + num_cliente);
 		this.socketAlCliente = socketAlCliente;
+		this.clientes = clientes;
 		thread.start();
 	}
 
@@ -32,26 +35,37 @@ public class HiloChat implements Runnable{
 		try {
 
 			// Aqui salimos para el servidor.
-			salida = new PrintStream(socketAlCliente.getOutputStream());
+			
 			
 			// Aqui hacemos la entrada al servidor
 			entrada = new InputStreamReader(socketAlCliente.getInputStream());
+			
 			entradaBuffer = new BufferedReader(entrada);
 			
 			String texto ="";
 			boolean continuar = true;
 			
 			while(continuar) {
+				
 				texto = entradaBuffer.readLine();
 				
 				if(texto.trim().equalsIgnoreCase("FIN")) {
 					
 					salida.println("OK");
+					
 					System.out.println(thread.getName() + " hemos cerrado el chat hasta nueva orden");
+					
 					continuar = false;
+					
 				}else {
 					System.out.println(thread.getName() + " dice: " + texto);
-					salida.println(texto);
+					
+					for (Socket socket : clientes) {
+						if(socket != socketAlCliente) {
+						salida = new PrintStream(socket.getOutputStream());
+						salida.println(thread.getName() + " dice: " + texto);
+						}
+					}
 				}
 			}
 			socketAlCliente.close();
