@@ -19,16 +19,18 @@ public class HiloChat implements Runnable{
 		this.socketAlCliente = socketAlCliente;
 		thread.start();
 	}
-	
+
 
 	@Override
 	public void run() {
-		System.out.println("Conexión establecida con el hilo: " + thread.getName());
+		System.out.println("Estableciendo comunicacion con " + thread.getName());
+
 		PrintStream salida = null;
 		InputStreamReader entrada = null;
 		BufferedReader entradaBuffer = null;
 		
 		try {
+
 			// Aqui salimos para el servidor.
 			salida = new PrintStream(socketAlCliente.getOutputStream());
 			
@@ -42,19 +44,18 @@ public class HiloChat implements Runnable{
 			while(continuar) {
 				texto = entradaBuffer.readLine();
 				
-				
 				if(texto.trim().equalsIgnoreCase("FIN")) {
 					
 					salida.println("OK");
 					System.out.println(thread.getName() + " hemos cerrado el chat hasta nueva orden");
 					continuar = false;
 				}else {
-					System.out.println("El mensaje es: " + texto);
+					System.out.println(thread.getName() + " dice: " + texto);
 					salida.println(texto);
 				}
 			}
 			socketAlCliente.close();
-			
+
 		} catch (IOException e) {
 			System.err.println("HiloContadorLetras: Error de entrada/salida");
 			e.printStackTrace();
