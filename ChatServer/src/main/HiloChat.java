@@ -31,7 +31,7 @@ public class HiloChat implements Runnable{
 		
 		try {
 
-			// Aqui salimos para el servidor.
+			// Aqui salimos para el cliente.
 			salida = new PrintStream(socketAlCliente.getOutputStream());
 			
 			// Aqui hacemos la entrada al servidor
