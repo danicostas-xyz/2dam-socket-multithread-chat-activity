@@ -49,7 +49,6 @@ public static void main(String[] args) {
                  PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
                  String texto;
                  while (true) {
-                     System.out.print("Tú: ");
                      texto = sc.nextLine();
 
                      salida.println(texto); // Enviar mensaje al servidor
