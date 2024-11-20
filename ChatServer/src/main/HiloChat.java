@@ -33,9 +33,6 @@ public class HiloChat implements Runnable{
 		BufferedReader entradaBuffer = null;
 		
 		try {
-
-			// Aqui salimos para el servidor.
-			
 			
 			// Aqui hacemos la entrada al servidor
 			entrada = new InputStreamReader(socketAlCliente.getInputStream());
