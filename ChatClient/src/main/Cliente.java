@@ -35,7 +35,6 @@ public static void main(String[] args) {
                  String mensajeServidor = "";
                  while (true) {
                      System.out.println(entradaBuffer.readLine());
-                     System.out.print("Tú: "); 
                  }
              } catch (IOException e) {
                  System.out.println("CLIENTE: Conexión cerrada por el servidor.");
@@ -50,7 +49,6 @@ public static void main(String[] args) {
                  PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
                  String texto;
                  while (true) {
-                     System.out.print("Tú: ");
                      texto = sc.nextLine();
 
                      salida.println(texto); // Enviar mensaje al servidor
