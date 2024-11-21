@@ -14,17 +14,26 @@ public static final int PUERTO = 2018;
 public static final String IP_SERVER = "localhost";
 
 public static void main(String[] args) {
-	System.out.println("        APLICACIÓN CLIENTE         ");
-	System.out.println("-----------------------------------");
-
+	System.out.println("===================================");
+	System.out.println("       🖥️  APLICACIÓN CLIENTE      ");
+	System.out.println("===================================");
+	
 	InetSocketAddress direccionServidor = new InetSocketAddress(IP_SERVER, PUERTO);
 	
 	 try {
          System.out.println("CLIENTE: Esperando a que el servidor acepte la conexión");
          Socket socketAlServidor = new Socket();
          socketAlServidor.connect(direccionServidor);
-         System.out.println("CLIENTE: Conexión establecida... a " + IP_SERVER +
-                            " por el puerto " + PUERTO);
+         System.out.println("===================================");
+         System.out.println("        📡 CONEXIÓN ESTABLECIDA        ");
+         System.out.println("===================================");
+         System.out.println("🔗 Servidor: " + IP_SERVER);
+         System.out.println("🔌 Puerto: " + PUERTO);
+         System.out.println("-----------------------------------");
+         
+       
+         
+        
 
          // Hilo para leer mensajes del servidor
          Thread lectorServidor = new Thread(() -> {
@@ -37,7 +46,10 @@ public static void main(String[] args) {
                      System.out.println(entradaBuffer.readLine());
                  }
              } catch (IOException e) {
-                 System.out.println("CLIENTE: Conexión cerrada por el servidor.");
+            	 System.out.println("===================================");
+            	 System.out.println("   ❌ CLIENTE: CONEXIÓN CERRADA   ");
+            	 System.out.println("===================================");
+            	 System.out.println("💔 El servidor ha cerrado la conexión.");
              }
          });
 
@@ -46,20 +58,26 @@ public static void main(String[] args) {
         	 Scanner sc = new Scanner(System.in);
              try {
             	 
-                 PrintStream salida = new PrintStream(socketAlServidor.getOutputStream());
+                 PrintStream salida1 = new PrintStream(socketAlServidor.getOutputStream());
                  String texto;
                  while (true) {
                      texto = sc.nextLine();
 
-                     salida.println(texto); // Enviar mensaje al servidor
+                     salida1.println(texto); // Enviar mensaje al servidor
                      if ("FIN".equalsIgnoreCase(texto)) {
-                         System.out.println("CLIENTE: Cerrando conexión...");
+                    	 System.out.println("=====================================");
+                    	 System.out.println("   🔒 CLIENTE: CERRANDO CONEXIÓN   ");
+                    	 System.out.println("=====================================");
+                    	 System.out.println("🔌 Desconectando del servidor...");
                          break; // Salir del bucle y cerrar conexión
                      }
                  }
                  socketAlServidor.close(); // Cerrar el socket al terminar
              } catch (IOException e) {
-                 System.out.println("CLIENTE: Error al enviar datos al servidor.");
+            	 System.out.println("===============================================");
+            	 System.out.println("   ⚠️ CLIENTE: ERROR AL ENVIAR DATOS AL SERVIDOR   ");
+            	 System.out.println("===============================================");
+            	 System.out.println("❌ Hubo un problema al intentar enviar los datos.");
              }
          });
 

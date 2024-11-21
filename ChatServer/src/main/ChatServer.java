@@ -13,8 +13,9 @@ public static final int PUERTO = 2018;
 public static List<Socket> clientes = new ArrayList<Socket>();
 	
 	public static void main(String[] args) {
-		System.out.println("      APLICACIÓN DE SERVIDOR CON HILOS     ");
-		System.out.println("-------------------------------------------");
+		System.out.println("===========================================");
+		System.out.println("   🖥️  APLICACIÓN DE SERVIDOR CON HILOS    ");
+		System.out.println("===========================================");
 		
 		
 		int peticion = 0;
