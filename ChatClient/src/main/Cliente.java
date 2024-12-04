@@ -34,10 +34,13 @@ public static void main(String[] args) {
 
                  String mensajeServidor = "";
                  while (true) {
-                     System.out.println(entradaBuffer.readLine());
+                     if(entradaBuffer.ready()) {
+                         mensajeServidor = entradaBuffer.readLine();
+                         System.out.println(mensajeServidor);
+                     }
                  }
              } catch (IOException e) {
-                 System.out.println("CLIENTE: Conexión cerrada por el servidor.");
+                 System.out.println(":::Conexión cerrada por el servidor.");
              }
          });
 
@@ -53,11 +56,13 @@ public static void main(String[] args) {
 
                      salida.println(texto); // Enviar mensaje al servidor
                      if ("FIN".equalsIgnoreCase(texto)) {
-                         System.out.println("CLIENTE: Cerrando conexión...");
+                         System.out.println(":::Cerrando conexión...");
                          break; // Salir del bucle y cerrar conexión
                      }
                  }
-                 socketAlServidor.close(); // Cerrar el socket al terminar
+                 // Cerrar el socket al terminar
+                 socketAlServidor.close();
+                 System.out.println(":::Conexión cerrada por el servidor.");
              } catch (IOException e) {
                  System.out.println("CLIENTE: Error al enviar datos al servidor.");
              }
@@ -79,7 +84,5 @@ public static void main(String[] args) {
          System.err.println("CLIENTE: Error -> " + e);
          e.printStackTrace();
      }
-
-     System.out.println("CLIENTE: Fin del programa");
  }
 }

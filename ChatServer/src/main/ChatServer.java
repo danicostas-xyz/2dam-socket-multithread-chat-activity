@@ -42,5 +42,6 @@ public static List<Socket> clientes = new ArrayList<Socket>();
 			e.printStackTrace();
 		}
 	}
+	
 }
 

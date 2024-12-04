@@ -14,9 +14,13 @@ public class HiloChat implements Runnable{
 	private Socket socketAlCliente;
 	private List<Socket> clientes;
 	
+	PrintStream salida = null;
+	InputStreamReader entrada = null;
+	BufferedReader entradaBuffer = null;
+	
 	
 	public HiloChat (Socket socketAlCliente, List<Socket> clientes) {
-		num_cliente++;
+		++num_cliente;
 		thread = new Thread(this, "Cliente " + num_cliente);
 		this.socketAlCliente = socketAlCliente;
 		this.clientes = clientes;
@@ -28,11 +32,11 @@ public class HiloChat implements Runnable{
 	public void run() {
 		System.out.println("Estableciendo comunicacion con " + thread.getName());
 
-		PrintStream salida = null;
-		InputStreamReader entrada = null;
-		BufferedReader entradaBuffer = null;
-		
 		try {
+			
+			enviarCantidadUsuariosActuales();
+			nuevoUsuarioConectado();
+			
 			
 			// Aqui hacemos la entrada al servidor
 			entrada = new InputStreamReader(socketAlCliente.getInputStream());
@@ -42,30 +46,30 @@ public class HiloChat implements Runnable{
 			String texto ="";
 			boolean continuar = true;
 			
+			
 			while(continuar) {
 				
 				texto = entradaBuffer.readLine();
 				
+				if(texto.isBlank() || texto == null) {
+					continue;
+				}
+				
 				if(texto.trim().equalsIgnoreCase("FIN")) {
+					System.out.println(thread.getName() + " ha abandonado el chat.");
 					
-					salida.println("OK");
 					
-					System.out.println(thread.getName() + " hemos cerrado el chat hasta nueva orden");
-					
+					enviarMensajes(thread.getName() + " ha abandonado el chat.");
+					clientes.remove(socketAlCliente);
+					enviarCantidadUsuariosActuales();
 					continuar = false;
 					
 				}else {
-					System.out.println(thread.getName() + " dice: " + texto);
+					System.out.println(thread.getName() + ": " + texto);
 					
-					for (Socket socket : clientes) {
-						if(socket != socketAlCliente) {
-						salida = new PrintStream(socket.getOutputStream());
-						salida.println(thread.getName() + " dice: " + texto);
-						}
+					enviarMensajes(thread.getName() + ": " + texto);
 					}
 				}
-			}
-			socketAlCliente.close();
 
 		} catch (IOException e) {
 			System.err.println("HiloContadorLetras: Error de entrada/salida");
@@ -75,6 +79,30 @@ public class HiloChat implements Runnable{
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void enviarMensajes(String texto) throws IOException {
+		for (Socket socket : clientes) {
+			if(socket != socketAlCliente) {
+			salida = new PrintStream(socket.getOutputStream());
+			salida.println(texto);
+			}
+		}
+	}
+	
+	public void enviarCantidadUsuariosActuales() throws IOException {
+			for (Socket socket : clientes) {
+				salida = new PrintStream(socket.getOutputStream());
+				salida.println("Usuarios conectados: " + clientes.size());
+			}
+		}
+	public void nuevoUsuarioConectado() throws IOException {
+		for (Socket socket : clientes) {
+			if(socket != socketAlCliente){
+			salida = new PrintStream(socket.getOutputStream());
+			salida.println(thread.getName() + " se ha conectado. ");
+			}
+		}
 	}
 
 }
