@@ -13,6 +13,7 @@ public class HiloChat implements Runnable{
 	private static int num_cliente = 0;
 	private Socket socketAlCliente;
 	private List<Socket> clientes;
+	private String nombreCliente;
 	
 	PrintStream salida = null;
 	InputStreamReader entrada = null;
@@ -42,6 +43,14 @@ public class HiloChat implements Runnable{
 			entrada = new InputStreamReader(socketAlCliente.getInputStream());
 			
 			entradaBuffer = new BufferedReader(entrada);
+			 salida = new PrintStream(socketAlCliente.getOutputStream());
+
+	            // Solicitar y registrar el nombre del cliente
+	            salida.println("Por favor, introduce tu nombre:");
+	            thread.setName(entradaBuffer.readLine());
+	            
+	            System.out.println("Cliente conectado: " + thread.getName());
+	            enviarATodos("🔔 " + thread.getName() + " se ha unido al chat.");
 			
 			String texto ="";
 			boolean continuar = true;
@@ -105,4 +114,18 @@ public class HiloChat implements Runnable{
 		}
 	}
 
-}
+
+	private void enviarATodos(String mensaje) {
+        
+            for (Socket cliente : clientes) {
+                try {
+                    PrintStream salida = new PrintStream(cliente.getOutputStream());
+                    salida.println(mensaje);
+                } catch (IOException e) {
+                    System.out.println("Error al enviar mensaje a un cliente.");
+                }
+            }
+        }
+    }
+
+
